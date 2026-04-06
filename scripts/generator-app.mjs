@@ -376,6 +376,19 @@ export class NPCKnightGeneratorApp extends foundry.applications.api.HandlebarsAp
     measureChoice: "roll"
   };
 
+  async close(options) {
+    await super.close(options);
+    this._result = null;
+    this._knightName = "";
+    this._selections = {
+      tableChoice: "random",
+      knightChoice: "random",
+      ageChoice: "random",
+      attrChoice: "random",
+      measureChoice: "roll"
+    };
+  }
+
   async _prepareContext(options) {
     const tableChoices = { random: "Random (d6)" };
     for (const [key, table] of Object.entries(KNIGHT_TABLES)) {
@@ -435,6 +448,10 @@ export class NPCKnightGeneratorApp extends foundry.applications.api.HandlebarsAp
     this._selections.ageChoice = formData.get("ageChoice") ?? "random";
     this._selections.attrChoice = formData.get("attrChoice") ?? "random";
     this._selections.measureChoice = formData.get("measureChoice") ?? "none";
+
+    // Sync the name field so manual edits aren't lost on re-render
+    const nameInput = this.element.querySelector("input[name='knightName']");
+    if (nameInput) this._knightName = nameInput.value;
 
     // Determine table
     let tableNum;
