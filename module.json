@@ -1,0 +1,42 @@
+{
+  "id": "npc-knight-generator",
+  "title": "NPC Knight Generator for Mythic Bastionland",
+  "description": "Generates NPC Knights using the tables from The Crowned Comiserate's NPC Knight Generator, featuring 72 unique knights across 6 themed tables with abilities, equipment, steeds, age, attributes, and the Measure of a Life table.",
+  "version": "1.0.0",
+  "compatibility": {
+    "minimum": "13",
+    "verified": "13",
+    "maximum": "14"
+  },
+  "relationships": {
+    "systems": [
+      {
+        "id": "mythicbastionland",
+        "type": "system",
+        "compatibility": {}
+      }
+    ]
+  },
+  "authors": [
+    {
+      "name": "John",
+      "flags": {}
+    }
+  ],
+  "esmodules": [
+    "scripts/npc-knight-generator.mjs"
+  ],
+  "styles": [
+    "styles/npc-knight-generator.css"
+  ],
+  "languages": [
+    {
+      "lang": "en",
+      "name": "English",
+      "path": "lang/en.json"
+    }
+  ],
+  "url": "",
+  "manifest": "",
+  "download": ""
+}

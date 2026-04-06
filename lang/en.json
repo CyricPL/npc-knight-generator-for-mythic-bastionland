@@ -1,0 +1,8 @@
+{
+  "NPC_KNIGHT_GEN": {
+    "Title": "NPC Knight Generator",
+    "Generate": "Generate Knight",
+    "CreateActor": "Create NPC Actor",
+    "RollMeasure": "Re-roll Measure"
+  }
+}

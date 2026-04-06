@@ -1,0 +1,224 @@
+<div class="nkg-container">
+  <p class="nkg-credit">Tables by <a href="https://thecrownedcomiserate.blogspot.com/2026/03/npc-knights-for-mythic-bastionland.html" target="_blank">The Crowned Comiserate</a></p>
+
+  {{!-- Configuration Panel --}}
+  <div class="nkg-config">
+    <h3><i class="fa-solid fa-dice"></i> Configuration</h3>
+
+    <div class="nkg-name-row">
+      <label for="knightName">Name</label>
+      <input type="text" name="knightName" value="{{knightName}}" placeholder="Enter name or generate randomly">
+      <button type="button" data-action="generateName" class="nkg-name-gen-btn" title="Generate Random Name">
+        <i class="fa-solid fa-dice"></i>
+      </button>
+    </div>
+
+    <div class="nkg-form-grid">
+      <div class="nkg-field">
+        <label for="tableChoice">Knight Table</label>
+        <select name="tableChoice">
+          {{#each tableChoices}}
+          <option value="{{@key}}" {{#if (eq @key ../selections.tableChoice)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="nkg-field">
+        <label for="knightChoice">Knight (d12)</label>
+        <select name="knightChoice">
+          {{#each knightChoices}}
+          <option value="{{@key}}" {{#if (eq @key ../selections.knightChoice)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="nkg-field">
+        <label for="ageChoice">Age</label>
+        <select name="ageChoice">
+          {{#each ageChoices}}
+          <option value="{{@key}}" {{#if (eq @key ../selections.ageChoice)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="nkg-field">
+        <label for="attrChoice">Attributes</label>
+        <select name="attrChoice">
+          {{#each attrChoices}}
+          <option value="{{@key}}" {{#if (eq @key ../selections.attrChoice)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+
+      <div class="nkg-field">
+        <label for="measureChoice">Measure of a Life</label>
+        <select name="measureChoice">
+          {{#each measureChoices}}
+          <option value="{{@key}}" {{#if (eq @key ../selections.measureChoice)}}selected{{/if}}>{{this}}</option>
+          {{/each}}
+        </select>
+      </div>
+    </div>
+
+    <div class="nkg-actions">
+      <button type="button" data-action="rollKnight" class="nkg-roll-btn">
+        <i class="fa-solid fa-dice-d20"></i> Generate Knight
+      </button>
+    </div>
+  </div>
+
+  {{!-- Results Panel --}}
+  {{#if result}}
+  <hr>
+  <div class="generator-results">
+    <div class="nkg-result-header">
+      <h2><i class="fa-solid fa-shield-halved"></i> The {{result.title}} Knight</h2>
+      <span class="nkg-source">{{result.tableName}} (Table {{result.tableNum}}, #{{result.knightNum}})</span>
+    </div>
+
+    {{!-- Null Knight Notice --}}
+    {{#if result.nullInfo}}
+    <div class="nkg-section nkg-special-notice">
+      <h4><i class="fa-solid fa-ghost"></i> The Null Knight</h4>
+      <p>Originally rolled The Null Knight ({{result.nullInfo.tableName}}, Table {{result.nullInfo.tableNum}}, #{{result.nullInfo.knightNum}}).
+      The {{result.title}} Knight is the knight who is <strong>missing or dead</strong>. This actor represents who they were.</p>
+    </div>
+    {{/if}}
+
+    {{!-- False Knight Notice --}}
+    {{#if result.falseInfo}}
+    <div class="nkg-section nkg-special-notice">
+      <h4><i class="fa-solid fa-masks-theater"></i> Impersonating</h4>
+      <p>The False Knight is impersonating <strong>The {{result.falseInfo.impersonating}} Knight</strong>
+      ({{result.falseInfo.impTableName}}, Table {{result.falseInfo.impTableNum}}, #{{result.falseInfo.impKnightNum}}).
+      Weapons and armor are drawn from the impersonated knight's equipment.</p>
+    </div>
+    {{/if}}
+
+    <div class="nkg-result-body">
+      {{!-- Ability --}}
+      <div class="nkg-section">
+        <h4><i class="fa-solid fa-star"></i> Ability</h4>
+        <p class="nkg-ability">{{result.ability}}</p>
+      </div>
+
+      {{!-- Stats --}}
+      <div class="nkg-section">
+        <h4><i class="fa-solid fa-chart-bar"></i> Attributes — {{result.attrs.label}}</h4>
+        <div class="nkg-stats-row">
+          <div class="nkg-stat">
+            <span class="nkg-stat-label">VIG</span>
+            <span class="nkg-stat-value">{{result.attrs.vig}}</span>
+          </div>
+          <div class="nkg-stat">
+            <span class="nkg-stat-label">CLA</span>
+            <span class="nkg-stat-value">{{result.attrs.cla}}</span>
+          </div>
+          <div class="nkg-stat">
+            <span class="nkg-stat-label">SPI</span>
+            <span class="nkg-stat-value">{{result.attrs.spi}}</span>
+          </div>
+          <div class="nkg-stat">
+            <span class="nkg-stat-label">GD</span>
+            <span class="nkg-stat-value">{{result.attrs.gd}}</span>
+          </div>
+        </div>
+        <div class="nkg-age-glory">
+          <span><strong>Age:</strong> {{titleCase result.age}}</span>
+          <span><strong>Glory:</strong> {{result.glory}}</span>
+        </div>
+      </div>
+
+      {{!-- Weapons --}}
+      <div class="nkg-section">
+        <h4><i class="fa-solid fa-swords"></i> Weapons</h4>
+        {{#each result.weapons}}
+        <div class="nkg-item-row">
+          <span class="nkg-item-name">{{this.name}}</span>
+          <span class="nkg-item-damage">{{this.damage}}</span>
+          {{#if this.tags}}
+          <span class="nkg-item-tags">{{join this.tags ", "}}</span>
+          {{/if}}
+        </div>
+        {{else}}
+        <p class="nkg-none">None</p>
+        {{/each}}
+      </div>
+
+      {{!-- Armor --}}
+      <div class="nkg-section">
+        <h4><i class="fa-solid fa-vest"></i> Armor</h4>
+        <p>{{result.armor.description}}</p>
+      </div>
+
+      {{!-- Steed --}}
+      <div class="nkg-section">
+        <h4><i class="fa-solid fa-horse"></i> Steed</h4>
+        {{#if result.steed}}
+        <p>{{titleCase result.steed.adj}} ({{titleCase result.steed.type}})</p>
+        {{else}}
+        <p class="nkg-none">None</p>
+        {{/if}}
+      </div>
+
+      {{!-- Measure of a Life --}}
+      {{#if result.measure}}
+      <div class="nkg-section nkg-measure">
+        <h4>
+          <i class="fa-solid fa-scroll"></i> Measure of a Life
+          <button type="button" data-action="rollMeasure" class="nkg-reroll-btn" title="Re-roll Measure">
+            <i class="fa-solid fa-rotate"></i>
+          </button>
+        </h4>
+        <div class="nkg-measure-grid">
+          <div class="nkg-measure-item">
+            <span class="nkg-measure-label">Arms</span>
+            <span class="nkg-measure-roll">{{result.measure.rolls.arms}}</span>
+            <span>{{result.measure.arms}}</span>
+          </div>
+          <div class="nkg-measure-item">
+            <span class="nkg-measure-label">Armor</span>
+            <span class="nkg-measure-roll">{{result.measure.rolls.armor}}</span>
+            <span>{{result.measure.armor}}</span>
+          </div>
+          <div class="nkg-measure-item">
+            <span class="nkg-measure-label">Steed</span>
+            <span class="nkg-measure-roll">{{result.measure.rolls.steed}}</span>
+            <span>{{result.measure.steed}}</span>
+          </div>
+          <div class="nkg-measure-item">
+            <span class="nkg-measure-label">Company</span>
+            <span class="nkg-measure-roll">{{result.measure.rolls.company}}</span>
+            <span>{{result.measure.company}}</span>
+          </div>
+          <div class="nkg-measure-item">
+            <span class="nkg-measure-label">Authority</span>
+            <span class="nkg-measure-roll">{{result.measure.rolls.authority}}</span>
+            <span>{{result.measure.authority}}</span>
+          </div>
+          <div class="nkg-measure-item">
+            <span class="nkg-measure-label">Scars</span>
+            <span class="nkg-measure-roll">{{result.measure.rolls.scars}}</span>
+            <span>
+              {{result.measure.scars}}
+              {{#each result.measure.scarResults}}
+              <div class="nkg-scar-result"><strong>Roll {{this.roll}}:</strong> {{this.text}}</div>
+              {{/each}}
+            </span>
+          </div>
+        </div>
+      </div>
+      {{/if}}
+    </div>
+
+    {{!-- Create Actor Button --}}
+    <div class="nkg-actions nkg-create-section">
+      <button type="button" data-action="createActor" class="nkg-create-btn">
+        <i class="fa-solid fa-user-plus"></i> Create Actor
+      </button>
+      <p class="nkg-create-note">Creates a Knight actor with virtues, guard, glory, equipment, and biography.
+        {{#if result.steed}}Also creates a separate Steed actor.{{/if}}</p>
+    </div>
+  </div>
+  {{/if}}
+</div>
